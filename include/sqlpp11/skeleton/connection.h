@@ -74,7 +74,6 @@ namespace sqlpp
 		class connection: public sqlpp::connection
 		{
 			std::unique_ptr<detail::connection_handle_t> _handle;
-			bool _transaction_active = false;
 
 			// direct execution
 			char_result_t select_impl(const std::string& statement);
@@ -202,7 +201,6 @@ namespace sqlpp
 			template<typename Remove>
 			_prepared_statement_t prepare_remove(Remove& r)
 			{
-
 				_context_t context(*this);
 				serialize(r, context);
 				return prepare_impl(context.str(), r._get_no_of_parameters(), 0);
@@ -220,13 +218,6 @@ namespace sqlpp
 
 			//! escape given string (does not quote, though)
 			std::string escape(const std::string& s) const;
-
-			//! call run on the argument
-			template<typename T>
-				auto run(const T& t) -> decltype(t._run(*this))
-				{
-					return t._run(*this);
-				}
 
 			//! call run on the argument
 			template<typename T>
